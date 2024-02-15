@@ -1,7 +1,8 @@
 from app.course_service import CourseService
+from classes.assignment import Assignment
 from classes.course import Course
 from typing import List
-
+from uuid import uuid4
 class CourseServiceImpl(CourseService):
   """
   Please implement the CourseService interface according to the requirements.
@@ -16,14 +17,15 @@ class CourseServiceImpl(CourseService):
   def get_course_by_id(self, course_id):
     if course_id in self.courses:
       return self.courses[course_id]
-    print(f"404: course with id {course_id} could not be founda")
+    print(f"404: course with id {course_id} could not be found")
     return None
 
   def create_course(self, course_name):
     # To create a course, we would insert a new course in to the courses maop with a new constructed obj
     try:
-      course = Course(len(self.courses), course_name)
-      self.courses[len(self.courses)] = course
+      id = uuid4()
+      course = Course(id, course_name)
+      self.courses[id] = course
     except:
       print(f"Course with name {course_name} could not be created. Please make sure course name is valid. I.e. Non-empty")
       raise Exception
@@ -35,8 +37,14 @@ class CourseServiceImpl(CourseService):
     self.courses.pop(course_id)
 
   def create_assignment(self, course_id, assignment_name):
-      return super().create_assignment(course_id, assignment_name)
-
+      # Create assignment id
+      try:
+        assgn_id = uuid4()
+        assignment = Assignment(assignment_name, assgn_id, course_id)
+        self.courses[course_id].assignments[assgn_id] = assignment
+      except:
+        print(f"Assignment with the following paramaters could not be made: name={assignment_name}, and course={course_id}")
+        
   def enroll_student(self, course_id, student_id):
       return super().enroll_student(course_id, student_id)
   
