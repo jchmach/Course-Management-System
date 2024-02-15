@@ -6,3 +6,6 @@ class Course:
         self.name = name
         self.assignments = {}
         self.students = set()
+
+    def __eq__(self, __o: object) -> bool:
+        return __o.id == self.id
