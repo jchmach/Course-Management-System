@@ -1,4 +1,5 @@
 from app.course_service import CourseService
+from classes.assignment import Assignment
 from classes.course import Course
 from typing import List
 from uuid import uuid4
@@ -16,7 +17,7 @@ class CourseServiceImpl(CourseService):
   def get_course_by_id(self, course_id):
     if course_id in self.courses:
       return self.courses[course_id]
-    print(f"404: course with id {course_id} could not be founda")
+    print(f"404: course with id {course_id} could not be found")
     return None
 
   def create_course(self, course_name):
@@ -36,8 +37,14 @@ class CourseServiceImpl(CourseService):
     self.courses.pop(course_id)
 
   def create_assignment(self, course_id, assignment_name):
-      return super().create_assignment(course_id, assignment_name)
-
+      # Create assignment id
+      try:
+        assgn_id = uuid4()
+        assignment = Assignment(assignment_name, assgn_id, course_id)
+        self.courses[course_id].assignments[assgn_id] = assignment
+      except:
+        print(f"Assignment with the following paramaters could not be made: name={assignment_name}, and course={course_id}")
+        
   def enroll_student(self, course_id, student_id):
       return super().enroll_student(course_id, student_id)
   
