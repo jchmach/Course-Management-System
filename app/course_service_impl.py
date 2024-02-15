@@ -1,7 +1,7 @@
 from app.course_service import CourseService
 from classes.course import Course
 from typing import List
-
+from uuid import uuid4
 class CourseServiceImpl(CourseService):
   """
   Please implement the CourseService interface according to the requirements.
@@ -22,8 +22,9 @@ class CourseServiceImpl(CourseService):
   def create_course(self, course_name):
     # To create a course, we would insert a new course in to the courses maop with a new constructed obj
     try:
-      course = Course(len(self.courses), course_name)
-      self.courses[len(self.courses)] = course
+      id = uuid4()
+      course = Course(id, course_name)
+      self.courses[id] = course
     except:
       print(f"Course with name {course_name} could not be created. Please make sure course name is valid. I.e. Non-empty")
       raise Exception
