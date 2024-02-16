@@ -27,7 +27,7 @@ class CourseServiceImpl(CourseService):
         return None
 
     def create_course(self, course_name):
-        # To create a course, we would insert a new course in to the courses maop with a new constructed obj
+        # To create a course, we would insert a new course in to the courses map with a new constructed obj
         try:
             id = uuid4()
             course = Course(id, course_name)
@@ -53,7 +53,6 @@ class CourseServiceImpl(CourseService):
                     self.students[student].submitted_assgns.remove(id)
 
     def create_assignment(self, course_id, assignment_name):
-        # Create assignment id
         try:
             assgn_id = uuid4()
             assignment = Assignment(assignment_name, assgn_id, course_id)
@@ -65,7 +64,7 @@ class CourseServiceImpl(CourseService):
 
     def enroll_student(self, course_id, student_id):
         try:
-          # If the student doesn't exist in the system yet, we create them
+            # If the student doesn't exist in the system yet, we create them
             if student_id not in self.students:
                 student = Student(student_id)
                 self.students[student_id] = student
@@ -82,7 +81,8 @@ class CourseServiceImpl(CourseService):
         if student_id not in self.students:
             print(f"Student with id {student_id} does not exist")
             raise Exception
-        # We need to remove the student from the course, but also remove all occurrences regarding the student and the assignments in both Assgn and Student
+        # We need to remove the student from the course, but also remove all occurrences regarding the 
+        # student and the assignments in both assgn and student
         # Get the course
         course = self.get_course_by_id(course_id)
         if not course:
@@ -139,6 +139,7 @@ class CourseServiceImpl(CourseService):
                 f"Course {course_id} does not have an assignment {assignment_id}")
             return -1
         grades = assignments[assignment_id].grades
+        # Return a grade of 0 if there are not submissions for this assignment
         if not grades:
             return 0
         return floor(sum(grades.values())/len(grades))
@@ -153,6 +154,7 @@ class CourseServiceImpl(CourseService):
             return -1
         assignments = course.assignments
         mark_sum = 0
+        # If the course has no assignments, return 0
         if len(assignments) == 0:
             return 0
         for assignment in assignments:
@@ -170,5 +172,6 @@ class CourseServiceImpl(CourseService):
         for student in course.students:
             mark = self.get_student_grade_avg(course_id, student)
             heapq.heappush(grade_heap, (mark, student))
+        # Return the top 5 highest marks in ascending order based on student id
         top_five = heapq.nlargest(5, grade_heap, key=lambda x: (x[0], -x[1]))
         return [student[1] for student in top_five]
