@@ -30,12 +30,12 @@ def test_create_course_invalid_name():
 
 def test_create_course():
     course_service = CourseServiceImpl()
-    course_service.create_course("Intro to Computer Science")
+    id1 = course_service.create_course("Intro to Computer Science")
     assert len(course_service.courses) == 1
-    course_service.create_course("Intro to Calculus 1")
+    id2 = course_service.create_course("Intro to Calculus 1")
     assert len(course_service.courses) == 2
-    assert isinstance(course_service.courses.popitem()[1], Course)
-    assert isinstance(course_service.courses.popitem()[1], Course)
+    assert isinstance(course_service.courses[id1], Course)
+    assert isinstance(course_service.courses[id2], Course)
     
 def test_get_course_id_empty():
     course_service = CourseServiceImpl()
@@ -91,9 +91,8 @@ def test_delete_course():
 
 def test_delete_and_add():
     course_service = CourseServiceImpl()
-    course_service.create_course("Intro to Computer Science")
+    id1 = course_service.create_course("Intro to Computer Science")
     course_service.create_course("Intro to Calculus 1")
-    courses = course_service.get_courses()
-    course_service.delete_course(courses[0].id)
+    course_service.delete_course(id1)
     course_service.create_course("Intro to Calculus 2")
     assert len(course_service.courses) == 2
