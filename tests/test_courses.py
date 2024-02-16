@@ -58,22 +58,10 @@ def test_get_course_id():
     course_service.courses[id2] = course2
     assert course_service.get_course_by_id(id2) == course2 
 
-
-def test_delete_course_empty():
-    course_service = CourseServiceImpl()
-    course_service.delete_course(uuid4())
-    assert len(course_service.courses) == 0
-
 def test_delete_course_not_found():
-    course_service = CourseServiceImpl()
-    id1 = uuid4()
-    course1 = Course(id1, "Intro to Computer Science")
-    course_service.courses[id1] = course1
-    id2 = uuid4()
-    course2 = Course(id2, "Intro to Calculus 1")
-    course_service.courses[id2] = course2
-    course_service.delete_course(uuid4())
-    assert len(course_service.courses) == 2
+    with pytest.raises(Exception):
+        course_service = CourseServiceImpl()
+        course_service.delete_course(uuid4())
 
 def test_delete_course():
     course_service = CourseServiceImpl()
